@@ -54,10 +54,12 @@ export default function Home() {
             className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
           >
             <LayoutGrid className="h-8 w-8 text-primary" />
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center text-center">
               <span>Tableros</span>
               {selectedCardName && (
-                <span className="text-xs font-normal mt-1 max-w-full truncate">{selectedCardName}</span>
+                <span className="text-xs font-normal mt-1">
+                  {selectedCardName}
+                </span>
               )}
             </div>
           </Button>
