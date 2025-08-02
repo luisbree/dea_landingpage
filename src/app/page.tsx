@@ -1,15 +1,9 @@
-import Image from 'next/image';
-
 export default function Home() {
   return (
     <div className="relative h-screen w-screen">
-      <Image
-        src="/fondo_dea.jpg"
-        alt="Fondo de pantalla"
-        layout="fill"
-        objectFit="cover"
-        quality={100}
-        className="-z-10"
+      <div
+        style={{ backgroundImage: "url('/fondo_dea.jpg')" }}
+        className="absolute inset-0 z-[-1] h-full w-full bg-cover bg-center"
       />
       <div className="relative z-10 flex h-full flex-col">
         <header className="bg-background/80 p-4 shadow-md">
