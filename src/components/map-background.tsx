@@ -1,3 +1,4 @@
+
 'use client';
 
 import 'ol/ol.css';
@@ -6,23 +7,21 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import { useEffect, useRef } from 'react';
 import { DragPan, MouseWheelZoom } from 'ol/interaction';
-import { primaryAction } from 'ol/events/condition';
-import type { MapBrowserEvent } from 'ol';
+import { fromLonLat } from 'ol/proj';
 
-export default function MapBackground() {
+interface MapBackgroundProps {
+  center: number[];
+  zoom: number;
+}
+
+export default function MapBackground({ center, zoom }: MapBackgroundProps) {
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<Map | null>(null);
 
   useEffect(() => {
-    if (!mapRef.current) {
+    if (!mapRef.current || mapInstance.current) {
       return;
     }
-
-    // Disable the context menu on the map
-    const handleContextMenu = (e: MouseEvent) => {
-      e.preventDefault();
-    };
-    mapRef.current.addEventListener('contextmenu', handleContextMenu);
-
 
     const esriLayer = new TileLayer({
       source: new XYZ({
@@ -32,33 +31,33 @@ export default function MapBackground() {
       }),
     });
 
+    const view = new View({
+      center: center,
+      zoom: zoom,
+    });
+
     const map = new Map({
       target: mapRef.current,
       layers: [esriLayer],
-      view: new View({
-        center: [-6450000, -4150000], // Centered roughly on Argentina
-        zoom: 5,
-      }),
+      view: view,
       controls: [],
-      interactions: [
-        new DragPan({
-          condition: function (event: MapBrowserEvent<UIEvent>) {
-            // Pan with right-click (button === 2)
-            return (event.originalEvent as MouseEvent).button === 2;
-          },
-        }),
-        new MouseWheelZoom(),
-      ],
+      interactions: [new DragPan(), new MouseWheelZoom()],
     });
 
-    // Clean up on unmount
+    mapInstance.current = map;
+
     return () => {
-      if (mapRef.current) {
-        mapRef.current.removeEventListener('contextmenu', handleContextMenu);
-      }
       map.setTarget(undefined);
+      mapInstance.current = null;
     };
-  }, []);
+  }, []); // Only run on initial mount
+
+  useEffect(() => {
+    if (mapInstance.current) {
+      const view = mapInstance.current.getView();
+      view.animate({ center, zoom, duration: 1000 });
+    }
+  }, [center, zoom]);
 
   return (
     <div

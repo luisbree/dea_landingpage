@@ -1,20 +1,55 @@
 
-import { Button } from "@/components/ui/button";
+'use client';
+
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   FolderKanban,
   LayoutGrid,
   Clock,
   Waypoints,
   Mail,
-  Link,
-} from "lucide-react";
-import SearchBar from "@/components/search-bar";
-import MapBackground from "@/components/map-background";
+} from 'lucide-react';
+import SearchBar, { type SearchResult } from '@/components/search-bar';
+import MapBackground from '@/components/map-background';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Terminal } from 'lucide-react';
+
+const INITIAL_VIEW_STATE = {
+  center: [-6450000, -4150000],
+  zoom: 5,
+};
 
 export default function Home() {
+  const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleSearchComplete = (query: string, results: SearchResult[]) => {
+    setSearchQuery(query);
+    setSearchResults(results);
+    setIsDialogOpen(true);
+  };
+
+  const handleResultSelect = (result: SearchResult) => {
+    setViewState({
+      center: result.coordinates,
+      zoom: 12, // Zoom in closer on selection
+    });
+    setIsDialogOpen(false);
+  };
+
   return (
     <div className="relative h-screen w-screen">
-      <MapBackground />
+      <MapBackground center={viewState.center} zoom={viewState.zoom} />
       <div className="absolute inset-0 -z-10 bg-background/40" />
       <div className="relative z-10 flex h-full flex-col font-body text-foreground">
         <header className="bg-primary shadow-md h-14">
@@ -23,7 +58,7 @@ export default function Home() {
               Departamento de Estudios Ambientales y Sociales
             </h1>
             <div className="w-1/3 max-w-sm">
-              <SearchBar />
+              <SearchBar onSearchComplete={handleSearchComplete} />
             </div>
           </div>
         </header>
@@ -68,6 +103,41 @@ export default function Home() {
           </div>
         </footer>
       </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Resultados de la Búsqueda</DialogTitle>
+            <DialogDescription>
+              Estudios filtrados por las palabras clave: &quot;{searchQuery}&quot;
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 max-h-80 overflow-y-auto">
+            {searchResults.length > 0 ? (
+              <ul className="space-y-2">
+                {searchResults.map((study, index) => (
+                  <li key={index}>
+                    <button
+                      onClick={() => handleResultSelect(study)}
+                      className="w-full text-left rounded-md border p-3 text-sm hover:bg-accent transition-colors"
+                    >
+                      {study.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <Alert>
+                <Terminal className="h-4 w-4" />
+                <AlertTitle>Sin resultados</AlertTitle>
+                <AlertDescription>
+                  No se encontraron estudios que coincidan con su búsqueda.
+                </AlertDescription>
+              </Alert>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
