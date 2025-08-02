@@ -15,7 +15,8 @@ export interface TrelloCard {
   desc: string;
 }
 
-export async function searchTrelloCards(boardId: string, query: string): Promise<TrelloCard[]> {
+// This function now fetches ALL cards from a board, filtering happens client-side.
+export async function searchTrelloCards(boardId: string): Promise<TrelloCard[]> {
   const fetch = (await import('node-fetch')).default;
   try {
     // We explicitly ask for the 'name' and 'desc' fields.

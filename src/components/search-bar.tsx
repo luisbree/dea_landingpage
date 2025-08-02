@@ -27,63 +27,52 @@ interface SearchBarProps {
 export default function SearchBar({ onSearchComplete, onQueryChange }: SearchBarProps) {
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [allStudies, setAllStudies] = useState<FilterStudiesOutput>([]);
   const { toast } = useToast();
 
+  // 1. Fetch all studies from Trello once on component mount
   useEffect(() => {
-    const verifyTrelloConnection = async () => {
+    const fetchAllStudies = async () => {
+      setIsLoading(true);
       try {
+        // Verify connection and show toast
         const boardName = await getTrelloBoardName(TRELLO_BOARD_ID);
         toast({
           title: 'Conexión exitosa con Trello',
           description: `Conectado al tablero: ${boardName}`,
         });
+
+        // Fetch all studies and store them in state
+        const results = await filterStudies({ boardId: TRELLO_BOARD_ID });
+        setAllStudies(results);
+
       } catch (error) {
         toast({
           variant: 'destructive',
           title: 'Error de conexión con Trello',
           description: (error as Error).message,
         });
-      }
-    };
-    verifyTrelloConnection();
-  }, [toast]);
-
-  const performSearch = useCallback(
-    async (currentQuery: string) => {
-      if (!currentQuery.trim()) {
-        onSearchComplete([]);
-        return;
-      }
-
-      setIsLoading(true);
-      try {
-        const results = await filterStudies({
-          keywords: currentQuery, // The flow will fetch all cards, keywords are for AI context
-          boardId: TRELLO_BOARD_ID,
-        });
-
-        // Client-side filtering
-        const filteredResults = results.filter(study => 
-          study.name.toLowerCase().includes(currentQuery.toLowerCase())
-        );
-
-        onSearchComplete(filteredResults);
-      } catch (error) {
-        console.error('Search failed:', error);
-        toast({
-          variant: 'destructive',
-          title: 'Error en la búsqueda',
-          description: 'Ocurrió un error al buscar en Trello. Por favor, intente de nuevo.',
-        });
-        onSearchComplete([]);
+        setAllStudies([]); // Clear studies on error
       } finally {
         setIsLoading(false);
       }
-    },
-    [onSearchComplete, toast]
-  );
-  
-  const debouncedSearch = useCallback(debounce(performSearch, 300), [performSearch]);
+    };
+    fetchAllStudies();
+  }, [toast]);
+
+  // 2. Perform filtering client-side whenever the query changes
+  const performClientSideSearch = useCallback((currentQuery: string) => {
+    if (!currentQuery.trim()) {
+      onSearchComplete([]);
+      return;
+    }
+    const filteredResults = allStudies.filter(study =>
+      study.name.toLowerCase().includes(currentQuery.toLowerCase())
+    );
+    onSearchComplete(filteredResults);
+  }, [allStudies, onSearchComplete]);
+
+  const debouncedSearch = useCallback(debounce(performClientSideSearch, 300), [performClientSideSearch]);
 
   useEffect(() => {
     onQueryChange(query);

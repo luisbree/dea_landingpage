@@ -9,7 +9,6 @@
  * - FilterStudiesOutput - The return type for the filterStudies function.
  */
 
-import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { fromLonLat } from 'ol/proj';
 import { searchTrelloCards } from '@/services/trello';
@@ -19,8 +18,8 @@ const StudySchema = z.object({
   coordinates: z.tuple([z.number(), z.number()]).describe('The longitude and latitude [lon, lat] for the study location.'),
 });
 
+// The input now only needs the board ID. Keywords are handled client-side.
 const FilterStudiesInputSchema = z.object({
-  keywords: z.string().describe('Keywords to provide context to the AI. The primary filtering will be done client-side.'),
   boardId: z.string().describe('The Trello board ID to search for studies.'),
 });
 export type FilterStudiesInput = z.infer<typeof FilterStudiesInputSchema>;
@@ -38,8 +37,11 @@ const extractCoordinates = (description: string): [number, number] | null => {
     return null;
 }
 
+// This is no longer an AI flow, but a regular server function.
+// It fetches all cards and processes them.
 export async function filterStudies(input: FilterStudiesInput): Promise<FilterStudiesOutput> {
-  const trelloCards = await searchTrelloCards(input.boardId, input.keywords);
+  // The 'query' parameter is removed, we fetch all cards.
+  const trelloCards = await searchTrelloCards(input.boardId);
   
   const studiesWithCoords = trelloCards.map(card => {
     const coords = extractCoordinates(card.desc);
@@ -55,18 +57,3 @@ export async function filterStudies(input: FilterStudiesInput): Promise<FilterSt
 
   return studiesWithCoords;
 }
-
-// The AI flow is no longer needed for direct filtering, but we can keep it for future, more complex extractions.
-// For now, the logic is handled directly in the exported `filterStudies` function.
-
-const filterStudiesFlow = ai.defineFlow(
-  {
-    name: 'filterStudiesFlow',
-    inputSchema: FilterStudiesInputSchema,
-    outputSchema: FilterStudiesOutputSchema,
-  },
-  async (input) => {
-    // This flow now acts as a wrapper. The main logic is in the exported function for direct use.
-    return filterStudies(input);
-  }
-);
