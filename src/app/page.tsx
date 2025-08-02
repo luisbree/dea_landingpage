@@ -28,18 +28,28 @@ export default function Home() {
 
   const handleCardSelect = async (card: TrelloCard | null) => {
     setSelectedCard(card);
-    if (card) {
+    if (card && card.desc) {
       try {
-        const location = await searchLocation(card.name);
-        if (location) {
-          setViewState({
-            center: fromLonLat([parseFloat(location.lon), parseFloat(location.lat)]),
-            zoom: 14,
-          });
+        const lines = card.desc.split('\n');
+        const locationLine = lines.find(line => line.startsWith('#'));
+        const query = locationLine ? locationLine.substring(1).trim() : null;
+        
+        if (query) {
+            const location = await searchLocation(query);
+            if (location) {
+              setViewState({
+                center: fromLonLat([parseFloat(location.lon), parseFloat(location.lat)]),
+                zoom: 14,
+              });
+            } else {
+              setViewState(INITIAL_VIEW_STATE);
+            }
+        } else {
+            setViewState(INITIAL_VIEW_STATE);
         }
       } catch (error) {
-        console.error('Error geocoding card name:', error);
-        // Optionally, show a toast to the user
+        console.error('Error geocoding card description:', error);
+        setViewState(INITIAL_VIEW_STATE);
       }
     } else {
       setViewState(INITIAL_VIEW_STATE);

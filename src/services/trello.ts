@@ -47,6 +47,7 @@ export interface TrelloCard {
   id: string;
   name: string;
   url: string;
+  desc: string;
 }
 
 export async function getTrelloBoards(): Promise<TrelloBoard[]> {
@@ -63,7 +64,7 @@ export async function getTrelloBoards(): Promise<TrelloBoard[]> {
 }
 
 async function getCardsFromBoard(boardId: string): Promise<TrelloCard[]> {
-    return (await trelloFetch(`/boards/${boardId}/cards?fields=name,url`)) as TrelloCard[];
+    return (await trelloFetch(`/boards/${boardId}/cards?fields=name,url,desc`)) as TrelloCard[];
 }
 
 export async function getAllCardsFromAllBoards(): Promise<TrelloCard[]> {
