@@ -37,6 +37,7 @@ export default function Home() {
     }
 
     let cutPoint = nameWithoutCode.substring(0, 70).lastIndexOf(' ');
+    // If no space is found, cut at 70 characters to prevent overflow
     if (cutPoint === -1) {
       cutPoint = 70;
     }
