@@ -1,7 +1,6 @@
 
 'use client';
 
-import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   FolderKanban,
@@ -10,8 +9,8 @@ import {
   Waypoints,
   Mail,
 } from 'lucide-react';
-import SearchBar, { type SearchResult } from '@/components/search-bar';
 import MapBackground from '@/components/map-background';
+import TrelloConnectionToast from '@/components/trello-connection-toast';
 
 const INITIAL_VIEW_STATE = {
   center: [-6450000, -4150000],
@@ -19,35 +18,10 @@ const INITIAL_VIEW_STATE = {
 };
 
 export default function Home() {
-  const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [showResults, setShowResults] = useState(false);
-
-  const handleSearchComplete = useCallback((results: SearchResult[]) => {
-    setSearchResults(results);
-    setShowResults(true);
-  }, []);
-
-  const handleResultSelect = (result: SearchResult) => {
-    setViewState({
-      center: result.coordinates,
-      zoom: 12, // Zoom in closer on selection
-    });
-    setSearchResults([]);
-    setShowResults(false);
-  };
-
-  const handleQueryChange = useCallback((query: string) => {
-    if (!query.trim()) {
-      setSearchResults([]);
-      setShowResults(false);
-    }
-  }, []);
-
-
   return (
     <div className="relative h-screen w-screen">
-      <MapBackground center={viewState.center} zoom={viewState.zoom} />
+      <TrelloConnectionToast />
+      <MapBackground center={INITIAL_VIEW_STATE.center} zoom={INITIAL_VIEW_STATE.zoom} />
       <div className="absolute inset-0 -z-10 bg-background/40" />
       <div
         className="relative z-10 flex h-full flex-col font-body text-foreground"
@@ -57,26 +31,6 @@ export default function Home() {
             <h1 className="font-headline text-2xl font-bold tracking-tight text-primary-foreground">
               Departamento de Estudios Ambientales y Sociales
             </h1>
-            <div className="relative w-1/3 max-w-sm">
-              <SearchBar 
-                onSearchComplete={handleSearchComplete} 
-                onQueryChange={handleQueryChange}
-              />
-              {showResults && searchResults.length > 0 && (
-                <ul className="absolute mt-2 w-full rounded-md border bg-card shadow-lg max-h-80 overflow-y-auto z-20">
-                  {searchResults.map((study, index) => (
-                    <li key={index}>
-                      <button
-                        onClick={() => handleResultSelect(study)}
-                        className="w-full text-left p-3 text-sm hover:bg-accent transition-colors"
-                      >
-                        {study.name}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
           </div>
         </header>
 
