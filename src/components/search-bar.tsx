@@ -41,8 +41,7 @@ export default function SearchBar({ onSearchComplete, onQueryChange }: SearchBar
         toast({
           variant: 'destructive',
           title: 'Error de conexión con Trello',
-          description:
-            'No se pudo conectar al tablero. Revisa las credenciales y el ID del tablero.',
+          description: (error as Error).message,
         });
       }
     };

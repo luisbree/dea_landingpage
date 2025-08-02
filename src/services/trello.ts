@@ -25,6 +25,7 @@ export async function searchTrelloCards(boardId: string, query: string): Promise
 
     if (!response.ok) {
       const errorText = await response.text();
+      // This is a generic error for the search itself, the more specific one is on board name fetch.
       throw new Error(`Trello API error: ${response.status} ${errorText}`);
     }
 
@@ -43,9 +44,15 @@ export async function getTrelloBoardName(boardId: string): Promise<string> {
     const response = await fetch(url);
 
     if (!response.ok) {
+        if (response.status === 401) {
+            throw new Error('Credenciales de Trello inválidas. Revisa tu API Key y Token en el archivo .env.');
+        }
+        if (response.status === 404) {
+            throw new Error('Tablero no encontrado. Revisa el ID del tablero o tus permisos de acceso.');
+        }
         const errorText = await response.text();
         console.error(`Trello API error while fetching board name: ${response.status} ${errorText}`);
-        throw new Error('Could not fetch board name from Trello.');
+        throw new Error('No se pudo conectar al tablero de Trello.');
     }
 
     const boardData = (await response.json()) as { name: string };
