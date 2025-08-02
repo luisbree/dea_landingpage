@@ -14,14 +14,17 @@ export default function Home() {
   return (
     <div className="relative h-screen w-screen">
       <div
-        style={{ backgroundImage: "url('/fondo_dea.jpeg')" }}
+        style={{
+          backgroundImage: "url('/fondo_dea.jpeg')",
+          filter: "contrast(1.1)",
+        }}
         data-ai-hint="background landscape"
         className="absolute inset-0 -z-20 bg-cover bg-center"
       />
       <div className="absolute inset-0 -z-10 bg-background/40" />
       <div className="relative z-10 flex h-full flex-col font-body text-foreground">
-        <header className="bg-primary shadow-md">
-          <div className="container mx-auto flex h-14 items-center justify-between px-4">
+        <header className="bg-primary shadow-md h-14">
+          <div className="container mx-auto flex h-full items-center justify-between px-4">
             <h1 className="font-headline text-2xl font-bold tracking-tight text-primary-foreground">
               Departamento de Estudios Ambientales y Sociales
             </h1>
