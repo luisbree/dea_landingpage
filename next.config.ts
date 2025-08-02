@@ -18,6 +18,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  webpack: (config, { isServer }) => {
+    // OpenLayers uses some modules that don't play nice with server-side rendering.
+    // This will replace them with a mock on the server.
+    if (isServer) {
+      config.resolve.alias['ol/interaction'] = false;
+    }
+    return config;
+  },
 };
 
 export default nextConfig;

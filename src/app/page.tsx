@@ -9,18 +9,12 @@ import {
   Link,
 } from "lucide-react";
 import SearchBar from "@/components/search-bar";
+import MapBackground from "@/components/map-background";
 
 export default function Home() {
   return (
     <div className="relative h-screen w-screen">
-      <div
-        style={{
-          backgroundImage: "url('/fondo_dea.jpeg')",
-          filter: "contrast(1.1)",
-        }}
-        data-ai-hint="background landscape"
-        className="absolute inset-0 -z-20 bg-cover bg-center"
-      />
+      <MapBackground />
       <div className="absolute inset-0 -z-10 bg-background/40" />
       <div className="relative z-10 flex h-full flex-col font-body text-foreground">
         <header className="bg-primary shadow-md h-14">
