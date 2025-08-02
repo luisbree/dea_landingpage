@@ -14,11 +14,10 @@ export default function Home() {
   return (
     <div className="relative flex flex-col min-h-screen bg-background text-foreground">
        <Image
-          src="https://placehold.co/1920x1080.png"
-          alt="Abstract background"
+          src="/fondo_dea.jpg"
+          alt="Fondo del Departamento de Estudios Ambientales y Sociales"
           fill
           className="object-cover z-0 opacity-20"
-          data-ai-hint="concrete texture"
           priority
         />
       <header className="sticky top-0 z-10 p-4 sm:p-6 border-b bg-background/80 backdrop-blur-sm">
