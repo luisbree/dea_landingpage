@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { filterStudies, type FilterStudiesOutput } from '@/ai/flows/filter-search';
+import { getTrelloBoardName } from '@/services/trello';
 import { Loader2 } from 'lucide-react';
 import debounce from 'lodash.debounce';
 
@@ -27,6 +28,26 @@ export default function SearchBar({ onSearchComplete, onQueryChange }: SearchBar
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const verifyTrelloConnection = async () => {
+      try {
+        const boardName = await getTrelloBoardName(TRELLO_BOARD_ID);
+        toast({
+          title: 'Conexión exitosa con Trello',
+          description: `Conectado al tablero: ${boardName}`,
+        });
+      } catch (error) {
+        toast({
+          variant: 'destructive',
+          title: 'Error de conexión con Trello',
+          description:
+            'No se pudo conectar al tablero. Revisa las credenciales y el ID del tablero.',
+        });
+      }
+    };
+    verifyTrelloConnection();
+  }, [toast]);
 
   const performSearch = useCallback(
     async (currentQuery: string) => {
