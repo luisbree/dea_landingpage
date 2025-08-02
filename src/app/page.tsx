@@ -12,12 +12,13 @@ const mainButtons = [
 
 export default function Home() {
   return (
-    <div className="relative flex flex-col min-h-screen bg-background text-foreground">
+    <div className="relative flex flex-col min-h-screen text-foreground">
        <Image
           src="/fondo_dea.jpg"
           alt="Fondo del Departamento de Estudios Ambientales y Sociales"
-          fill
-          className="object-cover z-0 opacity-20"
+          layout="fill"
+          objectFit="cover"
+          className="z-0 opacity-20"
           priority
         />
       <header className="sticky top-0 z-10 p-4 sm:p-6 border-b bg-background/80 backdrop-blur-sm">
@@ -45,7 +46,7 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="p-4 border-t text-center z-10 bg-background/80">
+      <footer className="p-4 border-t text-center z-10 bg-background/80 backdrop-blur-sm">
         <div className="flex justify-center items-center gap-6 text-sm">
           <a
             href="mailto:contacto@dea.gov.ar"
