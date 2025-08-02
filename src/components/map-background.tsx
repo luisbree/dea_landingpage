@@ -5,6 +5,7 @@ import { Map, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import { useEffect, useRef } from 'react';
+import { DragPan, MouseWheelZoom } from 'ol/interaction';
 
 export default function MapBackground() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -32,12 +33,10 @@ export default function MapBackground() {
       controls: [],
       interactions: [],
     });
-
-    const view = map.getView();
     
     // Enable pan and zoom
-    map.addInteraction(new (require('ol/interaction').DragPan)());
-    map.addInteraction(new (require('ol/interaction').MouseWheelZoom)());
+    map.addInteraction(new DragPan());
+    map.addInteraction(new MouseWheelZoom());
 
 
     // Clean up on unmount
