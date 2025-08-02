@@ -21,7 +21,7 @@ export default function Home() {
       <div className="absolute inset-0 -z-10 bg-background/40" />
       <div className="relative z-10 flex h-full flex-col font-body text-foreground">
         <header className="bg-primary shadow-md">
-          <div className="container mx-auto flex h-20 items-center justify-between px-4">
+          <div className="container mx-auto flex h-14 items-center justify-between px-4">
             <h1 className="font-headline text-2xl font-bold tracking-tight text-primary-foreground">
               Departamento de Estudios Ambientales y Sociales
             </h1>
