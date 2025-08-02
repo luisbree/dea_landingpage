@@ -23,7 +23,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-body antialiased">
+      <body className="font-body antialiased bg-transparent">
         <div className="fixed inset-0 -z-10">
           <Image
             src="/fondo_dea.jpg"
