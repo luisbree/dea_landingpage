@@ -63,7 +63,7 @@ export default function Home() {
           </div>
         </header>
 
-        {/* <main className="grid flex-1 grid-cols-2 grid-rows-2 gap-8 p-16">
+        <main className="grid flex-1 grid-cols-2 grid-rows-2 gap-8 p-16">
           <Button
             variant="outline"
             className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
@@ -92,7 +92,7 @@ export default function Home() {
             <Waypoints className="h-8 w-8 text-primary" />
             CartoDEA
           </Button>
-        </main> */}
+        </main>
 
         <footer className="bg-neutral-700/60 py-2 dark:bg-neutral-800/60 mt-auto">
           <div className="container mx-auto flex items-center justify-center gap-8 text-sm text-primary-foreground">
