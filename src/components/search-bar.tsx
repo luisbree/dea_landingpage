@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -13,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { filterStudies } from "@/ai/flows/filter-search";
-import { Loader2, Search } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
 
@@ -62,7 +61,7 @@ export default function SearchBar() {
 
   return (
     <>
-      <form onSubmit={handleSearch} className="flex w-full items-center gap-2">
+      <form onSubmit={handleSearch} className="relative flex w-full items-center">
         <Input
           type="search"
           placeholder="Filtrar estudios..."
@@ -71,13 +70,7 @@ export default function SearchBar() {
           className="bg-card"
           aria-label="Buscar estudios"
         />
-        <Button type="submit" size="icon" variant="outline" disabled={isLoading} aria-label="Buscar">
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Search className="h-4 w-4" />
-          )}
-        </Button>
+        {isLoading && <Loader2 className="absolute right-3 h-4 w-4 animate-spin" />}
       </form>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
