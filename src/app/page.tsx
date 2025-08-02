@@ -22,6 +22,31 @@ const INITIAL_VIEW_STATE = {
 export default function Home() {
   const [selectedCardName, setSelectedCardName] = useState<string | null>(null);
 
+  const formatCardName = (name: string | null): { __html: string } => {
+    if (!name) return { __html: '' };
+    if (name.length <= 75) {
+      return { __html: name };
+    }
+  
+    const codeMatch = name.match(/\(([^)]+)\)$/);
+    const code = codeMatch ? codeMatch[0] : '';
+    const nameWithoutCode = code ? name.substring(0, name.length - code.length).trim() : name;
+  
+    if (nameWithoutCode.length <= 75) {
+        return { __html: name };
+    }
+
+    let cutPoint = nameWithoutCode.substring(0, 75).lastIndexOf(' ');
+    if (cutPoint === -1) {
+      cutPoint = 75;
+    }
+  
+    const part1 = nameWithoutCode.substring(0, cutPoint);
+    const part2 = nameWithoutCode.substring(cutPoint).trim();
+  
+    return { __html: `${part1}<br />${part2} ${code}`.trim() };
+  };
+
   return (
     <div className="relative h-screen w-screen">
       <TrelloConnectionToast />
@@ -57,9 +82,10 @@ export default function Home() {
             <div className="flex flex-col items-center text-center">
               <span>Tableros</span>
               {selectedCardName && (
-                <span className="text-xs font-normal mt-1">
-                  {selectedCardName}
-                </span>
+                 <span
+                    className="text-xs font-normal mt-1"
+                    dangerouslySetInnerHTML={formatCardName(selectedCardName)}
+                 />
               )}
             </div>
           </Button>
