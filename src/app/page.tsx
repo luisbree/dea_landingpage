@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import MapBackground from '@/components/map-background';
 import TrelloConnectionToast from '@/components/trello-connection-toast';
-import BoardSwitcher from '@/components/board-switcher';
+import CardSearch from '@/components/card-search';
 
 const INITIAL_VIEW_STATE = {
   center: [-6450000, -4150000],
@@ -33,7 +33,7 @@ export default function Home() {
               Departamento de Estudios Ambientales y Sociales
             </h1>
             <div className="w-1/3">
-              <BoardSwitcher />
+              <CardSearch />
             </div>
           </div>
         </header>
