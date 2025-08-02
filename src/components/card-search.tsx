@@ -9,7 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Textarea } from '@/components/ui/textarea';
 
 interface CardSearchProps {
-  onCardSelect: (cardName: string) => void;
+  onCardSelect: (card: TrelloCard) => void;
 }
 
 export default function CardSearch({ onCardSelect }: CardSearchProps) {
@@ -47,8 +47,7 @@ export default function CardSearch({ onCardSelect }: CardSearchProps) {
 
   const handleCardSelect = (card: TrelloCard) => {
     if (card) {
-      window.open(card.url, '_blank');
-      onCardSelect(card.name);
+      onCardSelect(card);
       setIsOpen(false);
       setQuery('');
     }

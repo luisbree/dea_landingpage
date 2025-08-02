@@ -13,6 +13,7 @@ import {
 import MapBackground from '@/components/map-background';
 import TrelloConnectionToast from '@/components/trello-connection-toast';
 import CardSearch from '@/components/card-search';
+import type { TrelloCard } from '@/services/trello';
 
 const INITIAL_VIEW_STATE = {
   center: [-6450000, -4150000],
@@ -20,7 +21,7 @@ const INITIAL_VIEW_STATE = {
 };
 
 export default function Home() {
-  const [selectedCardName, setSelectedCardName] = useState<string | null>(null);
+  const [selectedCard, setSelectedCard] = useState<TrelloCard | null>(null);
 
   const formatCardName = (name: string | null): { __html: string } => {
     if (!name) return { __html: '' };
@@ -46,6 +47,12 @@ export default function Home() {
   
     return { __html: `${lines.join('<br />')} ${code}`.trim() };
   };
+  
+  const handleBoardButtonClick = () => {
+    if (selectedCard) {
+      window.open(selectedCard.url, '_blank');
+    }
+  };
 
   return (
     <div className="relative h-screen w-screen">
@@ -61,7 +68,7 @@ export default function Home() {
               Departamento de Estudios Ambientales y Sociales
             </h1>
             <div className="w-1/3">
-              <CardSearch onCardSelect={setSelectedCardName} />
+              <CardSearch onCardSelect={setSelectedCard} />
             </div>
           </div>
         </header>
@@ -77,14 +84,15 @@ export default function Home() {
           <Button
             variant="outline"
             className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
+            onClick={handleBoardButtonClick}
           >
             <LayoutGrid className="h-8 w-8 text-primary" />
             <div className="flex flex-col items-center text-center">
               <span>Tableros</span>
-              {selectedCardName && (
+              {selectedCard && (
                  <span
                     className="text-xs font-normal mt-1"
-                    dangerouslySetInnerHTML={formatCardName(selectedCardName)}
+                    dangerouslySetInnerHTML={formatCardName(selectedCard.name)}
                  />
               )}
             </div>
