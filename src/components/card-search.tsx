@@ -6,7 +6,7 @@ import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@
 import { getAllCardsFromAllBoards, TrelloCard } from '@/services/trello';
 import { useToast } from '@/hooks/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function CardSearch() {
   const [allCards, setAllCards] = useState<TrelloCard[]>([]);
@@ -61,7 +61,7 @@ export default function CardSearch() {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Input
+        <Textarea
           value={query}
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder={isLoading ? 'Cargando tarjetas...' : 'Buscar una tarjeta...'}
