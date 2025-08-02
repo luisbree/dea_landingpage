@@ -18,8 +18,8 @@ export interface TrelloCard {
 export async function searchTrelloCards(boardId: string, query: string): Promise<TrelloCard[]> {
   const fetch = (await import('node-fetch')).default;
   try {
-    // Trello's search is broad. We'll get all cards and let the AI filter.
-    const url = `${BASE_URL}/boards/${boardId}/cards?key=${TRELLO_API_KEY}&token=${TRELLO_API_TOKEN}`;
+    // We explicitly ask for the 'name' and 'desc' fields.
+    const url = `${BASE_URL}/boards/${boardId}/cards?key=${TRELLO_API_KEY}&token=${TRELLO_API_TOKEN}&fields=name,desc`;
 
     const response = await fetch(url);
 
