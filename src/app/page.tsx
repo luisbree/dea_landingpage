@@ -65,22 +65,11 @@ export default function Home() {
           </Button>
         </main>
 
-        <footer className="bg-background/80 py-4">
+        <footer className="bg-neutral-700/60 py-2 dark:bg-neutral-800/60">
           <div className="container mx-auto flex items-center justify-center gap-8 text-sm text-primary-foreground">
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4" />
-              <span>dea.sociales@gamil.com</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Link className="h-4 w-4" />
-              <a
-                href="http://www.sociales.uba.ar/institucional/secretarias/investigacion/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                www.sociales.uba.ar/institucional/secretarias/investigacion/
-              </a>
+              <span>ambientales.dph@gmail.com</span>
             </div>
           </div>
         </footer>
