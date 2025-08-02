@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <div
-      style={{ backgroundImage: "url('https://placehold.co/1920x1080.png')" }}
+      style={{ backgroundImage: "url('/fondo_dea.jpeg')" }}
       data-ai-hint="background landscape"
       className="h-screen w-screen bg-cover bg-center"
     />
