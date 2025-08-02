@@ -8,7 +8,11 @@ import { useToast } from '@/hooks/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
 
-export default function CardSearch() {
+interface CardSearchProps {
+  onCardSelect: (cardName: string) => void;
+}
+
+export default function CardSearch({ onCardSelect }: CardSearchProps) {
   const [allCards, setAllCards] = useState<TrelloCard[]>([]);
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -41,9 +45,10 @@ export default function CardSearch() {
     );
   }, [query, allCards]);
 
-  const handleCardSelect = (cardUrl: string) => {
-    if (cardUrl) {
-      window.open(cardUrl, '_blank');
+  const handleCardSelect = (card: TrelloCard) => {
+    if (card) {
+      window.open(card.url, '_blank');
+      onCardSelect(card.name);
       setIsOpen(false);
       setQuery('');
     }
@@ -80,7 +85,7 @@ export default function CardSearch() {
                   <CommandItem
                     key={card.id}
                     value={card.name}
-                    onSelect={() => handleCardSelect(card.url)}
+                    onSelect={() => handleCardSelect(card)}
                     className="cursor-pointer"
                   >
                     {card.name}

@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   FolderKanban,
@@ -19,6 +20,8 @@ const INITIAL_VIEW_STATE = {
 };
 
 export default function Home() {
+  const [selectedCardName, setSelectedCardName] = useState<string | null>(null);
+
   return (
     <div className="relative h-screen w-screen">
       <TrelloConnectionToast />
@@ -33,7 +36,7 @@ export default function Home() {
               Departamento de Estudios Ambientales y Sociales
             </h1>
             <div className="w-1/3">
-              <CardSearch />
+              <CardSearch onCardSelect={setSelectedCardName} />
             </div>
           </div>
         </header>
@@ -51,7 +54,12 @@ export default function Home() {
             className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
           >
             <LayoutGrid className="h-8 w-8 text-primary" />
-            Tableros
+            <div className="flex flex-col items-center">
+              <span>Tableros</span>
+              {selectedCardName && (
+                <span className="text-xs font-normal mt-1">{selectedCardName}</span>
+              )}
+            </div>
           </Button>
           <Button
             variant="outline"
