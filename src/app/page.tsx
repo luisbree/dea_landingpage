@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   FolderKanban,
@@ -23,10 +23,10 @@ export default function Home() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [showResults, setShowResults] = useState(false);
 
-  const handleSearchComplete = (results: SearchResult[]) => {
+  const handleSearchComplete = useCallback((results: SearchResult[]) => {
     setSearchResults(results);
     setShowResults(true);
-  };
+  }, []);
 
   const handleResultSelect = (result: SearchResult) => {
     setViewState({
@@ -37,12 +37,12 @@ export default function Home() {
     setShowResults(false);
   };
 
-  const handleQueryChange = (query: string) => {
+  const handleQueryChange = useCallback((query: string) => {
     if (!query.trim()) {
       setSearchResults([]);
       setShowResults(false);
     }
-  };
+  }, []);
 
 
   return (
