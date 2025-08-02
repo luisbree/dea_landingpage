@@ -79,7 +79,7 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground;
+    @apply bg-background text-foreground;
   }
   body::before {
     content: '';
@@ -92,7 +92,7 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.2;
+    opacity: 0.3;
     z-index: -1;
   }
 }
