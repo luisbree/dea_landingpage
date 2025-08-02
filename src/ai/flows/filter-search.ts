@@ -2,9 +2,9 @@
 // src/ai/flows/filter-search.ts
 'use server';
 /**
- * @fileOverview A flow for filtering Trello cards based on keywords.
+ * @fileOverview A flow for fetching Trello cards and extracting study data.
  *
- * - filterStudies - A function that filters studies based on keywords.
+ * - filterStudies - A function that gets studies and extracts their coordinates.
  * - FilterStudiesInput - The input type for the filterStudies function.
  * - FilterStudiesOutput - The return type for the filterStudies function.
  */
@@ -20,56 +20,44 @@ const StudySchema = z.object({
 });
 
 const FilterStudiesInputSchema = z.object({
-  keywords: z.string().describe('Keywords to filter the studies by.'),
+  keywords: z.string().describe('Keywords to provide context to the AI. The primary filtering will be done client-side.'),
   boardId: z.string().describe('The Trello board ID to search for studies.'),
 });
 export type FilterStudiesInput = z.infer<typeof FilterStudiesInputSchema>;
 
-const FilterStudiesOutputSchema = z.array(StudySchema).describe('Filtered list of environmental studies with their coordinates.');
+const FilterStudiesOutputSchema = z.array(StudySchema).describe('List of all environmental studies found with their coordinates.');
 export type FilterStudiesOutput = z.infer<typeof FilterStudiesOutputSchema>;
 
 // Helper to extract coordinates from card description
 const extractCoordinates = (description: string): [number, number] | null => {
     const match = description.match(/coords:\s*\[\s*(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)\s*\]/);
     if (match && match[1] && match[2]) {
+        // IMPORTANT: Trello gives [lon, lat], fromLonLat expects [lon, lat]
         return [parseFloat(match[1]), parseFloat(match[2])];
     }
     return null;
 }
 
 export async function filterStudies(input: FilterStudiesInput): Promise<FilterStudiesOutput> {
-  const flowResult = await filterStudiesFlow(input);
-  // Transform coordinates for OpenLayers
-  return flowResult.map(study => ({
-    ...study,
-    coordinates: fromLonLat(study.coordinates) as [number, number],
-  }));
+  const trelloCards = await searchTrelloCards(input.boardId, input.keywords);
+  
+  const studiesWithCoords = trelloCards.map(card => {
+    const coords = extractCoordinates(card.desc);
+    if (coords) {
+      return {
+        name: card.name,
+        // Transform coordinates for OpenLayers
+        coordinates: fromLonLat(coords) as [number, number],
+      };
+    }
+    return null;
+  }).filter((study): study is { name: string; coordinates: [number, number] } => study !== null);
+
+  return studiesWithCoords;
 }
 
-const filterStudiesPrompt = ai.definePrompt({
-  name: 'filterStudiesPrompt',
-  input: {
-    schema: z.object({
-      keywords: z.string(),
-      studies: z.array(z.object({ name: z.string(), description: z.string() }))
-    })
-  },
-  output: { schema: FilterStudiesOutputSchema },
-  prompt: `You are an AI assistant that filters a list of environmental studies from Trello based on keywords provided by the user.
-
-  The user will provide keywords to filter by. Your goal is to return a new list containing only the studies that are relevant to the keywords.
-  For each relevant study, extract the coordinates from the description. The coordinates are in the format "coords: [lon, lat]".
-
-  Return the full study object, including name and the extracted coordinates, for each relevant study. If a study is relevant but has no coordinates, you can omit it.
-
-  Here are the keywords: {{{keywords}}}
-  Here are the studies:
-  {{#each studies}}
-  - Name: {{{this.name}}}, Description: {{{this.description}}}
-  {{/each}}
-  `,
-});
-
+// The AI flow is no longer needed for direct filtering, but we can keep it for future, more complex extractions.
+// For now, the logic is handled directly in the exported `filterStudies` function.
 
 const filterStudiesFlow = ai.defineFlow(
   {
@@ -78,22 +66,7 @@ const filterStudiesFlow = ai.defineFlow(
     outputSchema: FilterStudiesOutputSchema,
   },
   async (input) => {
-    const trelloCards = await searchTrelloCards(input.boardId, input.keywords);
-
-    const studiesToFilter = trelloCards.map(card => ({
-        name: card.name,
-        description: card.desc,
-    }));
-
-    if (studiesToFilter.length === 0) {
-        return [];
-    }
-
-    const { output } = await filterStudiesPrompt({
-        keywords: input.keywords,
-        studies: studiesToFilter,
-    });
-
-    return output!;
+    // This flow now acts as a wrapper. The main logic is in the exported function for direct use.
+    return filterStudies(input);
   }
 );
