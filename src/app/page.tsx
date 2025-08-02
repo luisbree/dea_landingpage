@@ -33,28 +33,28 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-8">
             <Button
               variant="outline"
-              className="h-32 w-64 flex-col gap-2 rounded-lg bg-neutral-200/70 p-4 text-xl font-semibold text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-neutral-200/90 dark:bg-neutral-800/70 dark:hover:bg-neutral-800/90"
+              className="h-32 w-80 flex-col gap-2 rounded-lg bg-neutral-200/70 p-4 text-xl font-semibold text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-neutral-200/90 dark:bg-neutral-800/70 dark:hover:bg-neutral-800/90"
             >
               <FolderKanban className="h-8 w-8 text-primary" />
               Gestión de proyectos
             </Button>
             <Button
               variant="outline"
-              className="h-32 w-64 flex-col gap-2 rounded-lg bg-neutral-200/70 p-4 text-xl font-semibold text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-neutral-200/90 dark:bg-neutral-800/70 dark:hover:bg-neutral-800/90"
+              className="h-32 w-80 flex-col gap-2 rounded-lg bg-neutral-200/70 p-4 text-xl font-semibold text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-neutral-200/90 dark:bg-neutral-800/70 dark:hover:bg-neutral-800/90"
             >
               <LayoutGrid className="h-8 w-8 text-primary" />
               Tableros
             </Button>
             <Button
               variant="outline"
-              className="h-32 w-64 flex-col gap-2 rounded-lg bg-neutral-200/70 p-4 text-xl font-semibold text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-neutral-200/90 dark:bg-neutral-800/70 dark:hover:bg-neutral-800/90"
+              className="h-32 w-80 flex-col gap-2 rounded-lg bg-neutral-200/70 p-4 text-xl font-semibold text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-neutral-200/90 dark:bg-neutral-800/70 dark:hover:bg-neutral-800/90"
             >
               <Clock className="h-8 w-8 text-primary" />
               Línea de tiempo
             </Button>
             <Button
               variant="outline"
-              className="h-32 w-64 flex-col gap-2 rounded-lg bg-neutral-200/70 p-4 text-xl font-semibold text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-neutral-200/90 dark:bg-neutral-800/70 dark:hover:bg-neutral-800/90"
+              className="h-32 w-80 flex-col gap-2 rounded-lg bg-neutral-200/70 p-4 text-xl font-semibold text-foreground shadow-lg backdrop-blur-sm transition-all hover:bg-neutral-200/90 dark:bg-neutral-800/70 dark:hover:bg-neutral-800/90"
             >
               <Waypoints className="h-8 w-8 text-primary" />
               CartoDEA
