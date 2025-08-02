@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -23,6 +24,16 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
+        <div className="fixed inset-0 -z-10">
+          <Image
+            src="/fondo_dea.jpg"
+            alt="Fondo de escritorio"
+            fill
+            style={{ objectFit: 'cover' }}
+            quality={100}
+          />
+        </div>
+        <div className="fixed inset-0 bg-background/40 -z-10" />
         {children}
         <Toaster />
       </body>
