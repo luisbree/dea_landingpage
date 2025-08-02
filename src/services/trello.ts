@@ -1,8 +1,6 @@
 
 'use server';
 
-import fetch from 'node-fetch';
-
 const TRELLO_API_KEY = process.env.TRELLO_API_KEY;
 const TRELLO_API_TOKEN = process.env.TRELLO_API_TOKEN;
 const BASE_URL = 'https://api.trello.com/1';
@@ -18,6 +16,7 @@ export interface TrelloCard {
 }
 
 export async function searchTrelloCards(boardId: string, query: string): Promise<TrelloCard[]> {
+  const fetch = (await import('node-fetch')).default;
   try {
     // Trello's search is broad. We'll get all cards and let the AI filter.
     const url = `${BASE_URL}/boards/${boardId}/cards?key=${TRELLO_API_KEY}&token=${TRELLO_API_TOKEN}`;
