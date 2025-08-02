@@ -6,7 +6,8 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import { useEffect, useRef } from 'react';
 import { DragPan, MouseWheelZoom } from 'ol/interaction';
-import { platformModifierKeyOnly } from 'ol/events/condition';
+import { primaryAction } from 'ol/events/condition';
+import type { MapBrowserEvent } from 'ol';
 
 export default function MapBackground() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -15,6 +16,13 @@ export default function MapBackground() {
     if (!mapRef.current) {
       return;
     }
+
+    // Disable the context menu on the map
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+    mapRef.current.addEventListener('contextmenu', handleContextMenu);
+
 
     const esriLayer = new TileLayer({
       source: new XYZ({
@@ -32,19 +40,24 @@ export default function MapBackground() {
         zoom: 5,
       }),
       controls: [],
-      interactions: [],
+      interactions: [
+        new DragPan({
+          condition: function (event: MapBrowserEvent<UIEvent>) {
+            // Pan with right-click (button === 2)
+            return (event.originalEvent as MouseEvent).button === 2;
+          },
+        }),
+        new MouseWheelZoom(),
+      ],
     });
 
-    // Enable pan with right-click and zoom
-    map.addInteraction(
-      new DragPan({
-        condition: platformModifierKeyOnly, // Use right-click for panning
-      })
-    );
-    map.addInteraction(new MouseWheelZoom());
-
     // Clean up on unmount
-    return () => map.setTarget(undefined);
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.removeEventListener('contextmenu', handleContextMenu);
+      }
+      map.setTarget(undefined);
+    };
   }, []);
 
   return (
