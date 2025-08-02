@@ -69,7 +69,7 @@ export default function CardSearch() {
           disabled={isLoading}
         />
       </PopoverTrigger>
-      <PopoverContent className="p-0 w-[--radix-popover-trigger-width]">
+      <PopoverContent className="p-0 w-[--radix-popover-trigger-width]" onOpenAutoFocus={(e) => e.preventDefault()}>
           <Command>
             <CommandList>
               {filteredCards.length === 0 && query.length > 0 && (
