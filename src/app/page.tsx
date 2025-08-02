@@ -16,7 +16,7 @@ export default function Home() {
        <Image
           src="/fondo_dea.jpg"
           alt="Fondo del Departamento de Estudios Ambientales y Sociales"
-          layout="fill"
+          fill
           objectFit="cover"
           className="z-0 opacity-20"
           priority
