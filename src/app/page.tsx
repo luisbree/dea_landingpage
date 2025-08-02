@@ -24,7 +24,7 @@ export default function Home() {
 
   const formatCardName = (name: string | null): { __html: string } => {
     if (!name) return { __html: '' };
-    if (name.length <= 70) {
+    if (name.length <= 60) {
       return { __html: name };
     }
   
@@ -32,14 +32,14 @@ export default function Home() {
     const code = codeMatch ? codeMatch[0] : '';
     const nameWithoutCode = code ? name.substring(0, name.length - code.length).trim() : name;
   
-    if (nameWithoutCode.length <= 70) {
+    if (nameWithoutCode.length <= 60) {
         return { __html: name };
     }
 
-    let cutPoint = nameWithoutCode.substring(0, 70).lastIndexOf(' ');
-    // If no space is found, cut at 70 characters to prevent overflow
+    let cutPoint = nameWithoutCode.substring(0, 60).lastIndexOf(' ');
+    // If no space is found, cut at 60 characters to prevent overflow
     if (cutPoint === -1) {
-      cutPoint = 70;
+      cutPoint = 60;
     }
   
     const part1 = nameWithoutCode.substring(0, cutPoint);
