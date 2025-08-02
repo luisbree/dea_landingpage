@@ -2,7 +2,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import {
   Select,
   SelectContent,
@@ -10,24 +9,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getTrelloBoards, TrelloBoard } from '@/services/trello';
+import { getAllCardsFromAllBoards, TrelloCard } from '@/services/trello';
 import { useToast } from '@/hooks/use-toast';
 
 export default function BoardSwitcher() {
-  const [boards, setBoards] = useState<TrelloBoard[]>([]);
+  const [cards, setCards] = useState<TrelloCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
   const { toast } = useToast();
 
   useEffect(() => {
-    async function fetchBoards() {
+    async function fetchAllCards() {
       try {
-        const fetchedBoards = await getTrelloBoards();
-        setBoards(fetchedBoards);
+        const fetchedCards = await getAllCardsFromAllBoards();
+        setCards(fetchedCards);
       } catch (error) {
         toast({
           variant: 'destructive',
-          title: 'Error al cargar tableros',
+          title: 'Error al cargar las tarjetas',
           description: error instanceof Error ? error.message : 'Ocurrió un error desconocido.',
         });
       } finally {
@@ -35,24 +33,24 @@ export default function BoardSwitcher() {
       }
     }
 
-    fetchBoards();
+    fetchAllCards();
   }, [toast]);
 
-  const handleBoardSelect = (boardId: string) => {
-    if (boardId) {
-      router.push(`/board/${boardId}`);
+  const handleCardSelect = (cardUrl: string) => {
+    if (cardUrl) {
+      window.open(cardUrl, '_blank');
     }
   };
 
   return (
-    <Select onValueChange={handleBoardSelect} disabled={isLoading || boards.length === 0}>
+    <Select onValueChange={handleCardSelect} disabled={isLoading || cards.length === 0}>
       <SelectTrigger className="w-full bg-primary-foreground text-foreground">
-        <SelectValue placeholder={isLoading ? 'Cargando tableros...' : 'Selecciona un tablero'} />
+        <SelectValue placeholder={isLoading ? 'Cargando tarjetas...' : 'Selecciona una tarjeta'} />
       </SelectTrigger>
       <SelectContent>
-        {boards.map((board) => (
-          <SelectItem key={board.id} value={board.id}>
-            {board.name}
+        {cards.map((card) => (
+          <SelectItem key={card.id} value={card.url}>
+            {card.name}
           </SelectItem>
         ))}
       </SelectContent>

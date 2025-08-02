@@ -43,6 +43,12 @@ export interface TrelloBoard {
   name: string;
 }
 
+export interface TrelloCard {
+  id: string;
+  name: string;
+  url: string;
+}
+
 export async function getTrelloBoards(): Promise<TrelloBoard[]> {
   try {
     const boards = (await trelloFetch('/members/me/boards?fields=name,id')) as TrelloBoard[];
@@ -54,4 +60,29 @@ export async function getTrelloBoards(): Promise<TrelloBoard[]> {
     }
     throw new Error('Ocurrió un error desconocido al obtener los tableros de Trello.');
   }
+}
+
+async function getCardsFromBoard(boardId: string): Promise<TrelloCard[]> {
+    return (await trelloFetch(`/boards/${boardId}/cards?fields=name,url`)) as TrelloCard[];
+}
+
+export async function getAllCardsFromAllBoards(): Promise<TrelloCard[]> {
+    try {
+        const boards = await getTrelloBoards();
+        const allCardsPromises = boards.map(board => getCardsFromBoard(board.id));
+        const cardsPerBoard = await Promise.all(allCardsPromises);
+        
+        const allCards = cardsPerBoard.flat();
+
+        allCards.sort((a, b) => a.name.localeCompare(b.name));
+        
+        return allCards;
+
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Failed to get all Trello cards:', error.message);
+            throw new Error(`No se pudieron obtener las tarjetas de Trello: ${error.message}`);
+        }
+        throw new Error('Ocurrió un error desconocido al obtener las tarjetas de Trello.');
+    }
 }
