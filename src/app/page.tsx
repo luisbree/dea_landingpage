@@ -57,7 +57,7 @@ export default function Home() {
             <div className="flex flex-col items-center">
               <span>Tableros</span>
               {selectedCardName && (
-                <span className="text-xs font-normal mt-1">{selectedCardName}</span>
+                <span className="text-xs font-normal mt-1 max-w-full truncate">{selectedCardName}</span>
               )}
             </div>
           </Button>
