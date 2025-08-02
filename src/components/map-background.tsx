@@ -6,6 +6,7 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import { useEffect, useRef } from 'react';
 import { DragPan, MouseWheelZoom } from 'ol/interaction';
+import { platformModifierKeyOnly } from 'ol/events/condition';
 
 export default function MapBackground() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -33,11 +34,14 @@ export default function MapBackground() {
       controls: [],
       interactions: [],
     });
-    
-    // Enable pan and zoom
-    map.addInteraction(new DragPan());
-    map.addInteraction(new MouseWheelZoom());
 
+    // Enable pan with right-click and zoom
+    map.addInteraction(
+      new DragPan({
+        condition: platformModifierKeyOnly, // Use right-click for panning
+      })
+    );
+    map.addInteraction(new MouseWheelZoom());
 
     // Clean up on unmount
     return () => map.setTarget(undefined);
