@@ -12,7 +12,7 @@ const mainButtons = [
 export default function Home() {
   return (
     <div className="relative flex flex-col min-h-screen text-foreground">
-      <header className="sticky top-0 z-10 p-4 sm:p-6 border-b bg-background/80 backdrop-blur-sm">
+      <header className="p-4 sm:p-6 border-b bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-headline font-bold text-primary text-center md:text-left">
             Departamento de Estudios Ambientales y Sociales
