@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import MapBackground from '@/components/map-background';
 import TrelloConnectionToast from '@/components/trello-connection-toast';
+import BoardSwitcher from '@/components/board-switcher';
 
 const INITIAL_VIEW_STATE = {
   center: [-6450000, -4150000],
@@ -26,11 +27,14 @@ export default function Home() {
       <div
         className="relative z-10 flex h-full flex-col font-body text-foreground"
       >
-        <header className="bg-primary shadow-md h-14">
+        <header className="bg-primary shadow-md h-16 flex-shrink-0">
           <div className="container mx-auto flex h-full items-center justify-between px-4">
-            <h1 className="font-headline text-2xl font-bold tracking-tight text-primary-foreground">
+            <h1 className="font-headline text-xl font-bold tracking-tight text-primary-foreground">
               Departamento de Estudios Ambientales y Sociales
             </h1>
+            <div className="w-1/3">
+              <BoardSwitcher />
+            </div>
           </div>
         </header>
 
