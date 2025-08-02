@@ -24,28 +24,27 @@ export default function Home() {
 
   const formatCardName = (name: string | null): { __html: string } => {
     if (!name) return { __html: '' };
-    if (name.length <= 60) {
+    
+    const codeMatch = name.match(/\(([^)]+)\)$/);
+    const code = codeMatch ? codeMatch[0] : '';
+    let nameWithoutCode = code ? name.substring(0, name.length - code.length).trim() : name;
+  
+    if (nameWithoutCode.length <= 60) {
       return { __html: name };
     }
   
-    const codeMatch = name.match(/\(([^)]+)\)$/);
-    const code = codeMatch ? codeMatch[0] : '';
-    const nameWithoutCode = code ? name.substring(0, name.length - code.length).trim() : name;
-  
-    if (nameWithoutCode.length <= 60) {
-        return { __html: name };
+    const lines = [];
+    while (nameWithoutCode.length > 60) {
+      let cutPoint = nameWithoutCode.substring(0, 60).lastIndexOf(' ');
+      if (cutPoint === -1) {
+        cutPoint = 60;
+      }
+      lines.push(nameWithoutCode.substring(0, cutPoint));
+      nameWithoutCode = nameWithoutCode.substring(cutPoint).trim();
     }
-
-    let cutPoint = nameWithoutCode.substring(0, 60).lastIndexOf(' ');
-    // If no space is found, cut at 60 characters to prevent overflow
-    if (cutPoint === -1) {
-      cutPoint = 60;
-    }
+    lines.push(nameWithoutCode);
   
-    const part1 = nameWithoutCode.substring(0, cutPoint);
-    const part2 = nameWithoutCode.substring(cutPoint).trim();
-  
-    return { __html: `${part1}<br />${part2} ${code}`.trim() };
+    return { __html: `${lines.join('<br />')} ${code}`.trim() };
   };
 
   return (
