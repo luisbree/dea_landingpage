@@ -7,14 +7,15 @@ import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 import { useEffect, useRef } from 'react';
 import { DragPan, MouseWheelZoom } from 'ol/interaction';
-import { fromLonLat } from 'ol/proj';
 
 interface MapBackgroundProps {
-  center: number[];
-  zoom: number;
+  viewState: {
+    center: number[];
+    zoom: number;
+  };
 }
 
-export default function MapBackground({ center, zoom }: MapBackgroundProps) {
+export default function MapBackground({ viewState }: MapBackgroundProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<Map | null>(null);
 
@@ -32,8 +33,8 @@ export default function MapBackground({ center, zoom }: MapBackgroundProps) {
     });
 
     const view = new View({
-      center: center,
-      zoom: zoom,
+      center: viewState.center,
+      zoom: viewState.zoom,
     });
 
     const map = new Map({
@@ -55,9 +56,9 @@ export default function MapBackground({ center, zoom }: MapBackgroundProps) {
   useEffect(() => {
     if (mapInstance.current) {
       const view = mapInstance.current.getView();
-      view.animate({ center, zoom, duration: 1000 });
+      view.animate({ center: viewState.center, zoom: viewState.zoom, duration: 1000 });
     }
-  }, [center, zoom]);
+  }, [viewState]);
 
   return (
     <div

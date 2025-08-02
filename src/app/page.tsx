@@ -14,6 +14,8 @@ import MapBackground from '@/components/map-background';
 import TrelloConnectionToast from '@/components/trello-connection-toast';
 import CardSearch from '@/components/card-search';
 import type { TrelloCard } from '@/services/trello';
+import { searchLocation } from '@/services/nominatim';
+import { fromLonLat } from 'ol/proj';
 
 const INITIAL_VIEW_STATE = {
   center: [-6450000, -4150000],
@@ -22,6 +24,27 @@ const INITIAL_VIEW_STATE = {
 
 export default function Home() {
   const [selectedCard, setSelectedCard] = useState<TrelloCard | null>(null);
+  const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
+
+  const handleCardSelect = async (card: TrelloCard | null) => {
+    setSelectedCard(card);
+    if (card) {
+      try {
+        const location = await searchLocation(card.name);
+        if (location) {
+          setViewState({
+            center: fromLonLat([parseFloat(location.lon), parseFloat(location.lat)]),
+            zoom: 14,
+          });
+        }
+      } catch (error) {
+        console.error('Error geocoding card name:', error);
+        // Optionally, show a toast to the user
+      }
+    } else {
+      setViewState(INITIAL_VIEW_STATE);
+    }
+  };
 
   const formatCardName = (name: string | null): { __html: string } => {
     if (!name) return { __html: '' };
@@ -57,7 +80,7 @@ export default function Home() {
   return (
     <div className="relative h-screen w-screen">
       <TrelloConnectionToast />
-      <MapBackground center={INITIAL_VIEW_STATE.center} zoom={INITIAL_VIEW_STATE.zoom} />
+      <MapBackground viewState={viewState} />
       <div className="absolute inset-0 -z-10 bg-background/40" />
       <div
         className="relative z-10 flex h-full flex-col font-body text-foreground"
@@ -68,7 +91,7 @@ export default function Home() {
               Departamento de Estudios Ambientales y Sociales
             </h1>
             <div className="w-1/3">
-              <CardSearch onCardSelect={setSelectedCard} />
+              <CardSearch onCardSelect={handleCardSelect} />
             </div>
           </div>
         </header>
