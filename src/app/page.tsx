@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import SearchBar from "@/components/search-bar";
 import { Mail, Link as LinkIcon } from "lucide-react";
+import Image from 'next/image';
 
 const mainButtons = [
   { label: "Gestión de proyectos" },
@@ -11,7 +12,15 @@ const mainButtons = [
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="relative flex flex-col min-h-screen bg-background text-foreground">
+       <Image
+          src="https://placehold.co/1920x1080.png"
+          alt="Abstract background"
+          fill
+          className="object-cover z-0 opacity-20"
+          data-ai-hint="concrete texture"
+          priority
+        />
       <header className="sticky top-0 z-10 p-4 sm:p-6 border-b bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-headline font-bold text-primary text-center md:text-left">
@@ -23,7 +32,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-grow container mx-auto p-4 sm:p-8 flex items-center justify-center">
+      <main className="flex-grow container mx-auto p-4 sm:p-8 flex items-center justify-center z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 w-full max-w-4xl">
           {mainButtons.map((button) => (
             <Button
@@ -37,7 +46,7 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="p-4 border-t text-center">
+      <footer className="p-4 border-t text-center z-10 bg-background/80">
         <div className="flex justify-center items-center gap-6 text-sm">
           <a
             href="mailto:contacto@dea.gov.ar"
