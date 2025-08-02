@@ -16,6 +16,7 @@ import CardSearch from '@/components/card-search';
 import type { TrelloCard } from '@/services/trello';
 import { searchLocation } from '@/services/nominatim';
 import { fromLonLat } from 'ol/proj';
+import { useToast } from '@/hooks/use-toast';
 
 const INITIAL_VIEW_STATE = {
   center: [-6450000, -4150000],
@@ -25,6 +26,7 @@ const INITIAL_VIEW_STATE = {
 export default function Home() {
   const [selectedCard, setSelectedCard] = useState<TrelloCard | null>(null);
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
+  const { toast } = useToast();
 
   const handleCardSelect = async (card: TrelloCard | null) => {
     setSelectedCard(card);
@@ -35,6 +37,10 @@ export default function Home() {
         const query = locationLine ? locationLine.substring(1).trim() : null;
         
         if (query) {
+            toast({
+              title: "Buscando ubicación",
+              description: `Buscando: "${query}"`,
+            });
             const location = await searchLocation(query);
             if (location) {
               setViewState({
