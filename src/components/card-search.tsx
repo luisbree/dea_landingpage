@@ -7,13 +7,13 @@ import { getAllCardsFromAllBoards, TrelloCard } from '@/services/trello';
 import { useToast } from '@/hooks/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
+import { searchLocation } from '@/services/nominatim';
 
 interface CardSearchProps {
   onCardSelect: (card: TrelloCard | null) => void;
-  selectedCard: TrelloCard | null;
 }
 
-export default function CardSearch({ onCardSelect, selectedCard }: CardSearchProps) {
+export default function CardSearch({ onCardSelect }: CardSearchProps) {
   const [allCards, setAllCards] = useState<TrelloCard[]>([]);
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -38,14 +38,6 @@ export default function CardSearch({ onCardSelect, selectedCard }: CardSearchPro
 
     fetchAllCards();
   }, [toast]);
-  
-  useEffect(() => {
-    if (selectedCard) {
-      setQuery(selectedCard.name);
-    } else {
-      setQuery('');
-    }
-  }, [selectedCard]);
 
   const filteredCards = useMemo(() => {
     if (!query) return [];
@@ -60,11 +52,11 @@ export default function CardSearch({ onCardSelect, selectedCard }: CardSearchPro
 
   const handleSelect = (card: TrelloCard) => {
     onCardSelect(card);
-    setQuery(card.name);
+    setQuery('');
     setIsOpen(false);
   };
   
-  const handleInputChange = (inputValue: string) => {
+  const handleInputChange = async (inputValue: string) => {
       setQuery(inputValue);
       
       const exactMatch = allCards.find(c => c.name.toLowerCase() === inputValue.toLowerCase());
@@ -80,7 +72,7 @@ export default function CardSearch({ onCardSelect, selectedCard }: CardSearchPro
         setIsOpen(false);
       }
   }
-
+  
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
