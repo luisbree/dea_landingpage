@@ -41,7 +41,6 @@ export default function CardSearch({ onCardSelect }: CardSearchProps) {
   const filteredCards = useMemo(() => {
     if (!query) return [];
     
-    // Do not show results if the query exactly matches a card name
     const exactMatch = allCards.find(card => card.name.toLowerCase() === query.toLowerCase());
     if (exactMatch) return [];
 
@@ -62,14 +61,14 @@ export default function CardSearch({ onCardSelect }: CardSearchProps) {
       const exactMatch = allCards.find(c => c.name.toLowerCase() === inputValue.toLowerCase());
       if (exactMatch) {
         onCardSelect(exactMatch);
-        setIsOpen(false);
       } else {
         onCardSelect(null);
-        if(inputValue.length > 0 && !isOpen) {
-            setIsOpen(true);
-        } else if (inputValue.length === 0 && isOpen) {
-            setIsOpen(false);
-        }
+      }
+
+      if (inputValue.length > 0 && !isOpen && !exactMatch) {
+        setIsOpen(true);
+      } else if (inputValue.length === 0 && isOpen) {
+        setIsOpen(false);
       }
   }
 
