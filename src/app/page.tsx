@@ -18,8 +18,6 @@ import type { TrelloCard } from '@/services/trello';
 import { searchLocation } from '@/services/nominatim';
 import { fromLonLat } from 'ol/proj';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 const INITIAL_VIEW_STATE = {
   center: [-6450000, -4150000],
@@ -137,60 +135,44 @@ export default function Home() {
           </div>
         </header>
 
-        <main className="flex-1 grid grid-cols-3 gap-8 p-16">
-          <div className="col-span-2 grid grid-cols-2 grid-rows-2 gap-8">
-            <Button
-              variant="outline"
-              className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
-            >
-              <FolderKanban className="h-8 w-8 text-primary" />
-              Gestión de proyectos
-            </Button>
-            <Button
-              variant="outline"
-              className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
-              onClick={handleBoardButtonClick}
-            >
-              <LayoutGrid className="h-8 w-8 text-primary" />
-              <div className="flex flex-col items-center text-center">
-                <span>Tableros</span>
-                {selectedCard && (
-                   <span
-                      className="text-xs font-normal mt-1"
-                      dangerouslySetInnerHTML={formatCardName(selectedCard.name)}
-                   />
-                )}
-              </div>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
-            >
-              <Clock className="h-8 w-8 text-primary" />
-              Línea de tiempo
-            </Button>
-            <Button
-              variant="outline"
-              className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
-            >
-              <Waypoints className="h-8 w-8 text-primary" />
-              CartoDEA
-            </Button>
-          </div>
-          {selectedCard && (
-            <div className="col-span-1">
-              <Card className="h-full bg-neutral-700/60 border-transparent text-primary-foreground shadow-lg">
-                <CardHeader>
-                  <CardTitle className="text-primary">{selectedCard.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ScrollArea className="h-[calc(100vh-250px)]">
-                    <p className="text-sm whitespace-pre-wrap">{selectedCard.desc}</p>
-                  </ScrollArea>
-                </CardContent>
-              </Card>
+        <main className="flex-1 grid grid-cols-2 grid-rows-2 gap-8 p-16">
+          <Button
+            variant="outline"
+            className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
+          >
+            <FolderKanban className="h-8 w-8 text-primary" />
+            Gestión de proyectos
+          </Button>
+          <Button
+            variant="outline"
+            className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
+            onClick={handleBoardButtonClick}
+          >
+            <LayoutGrid className="h-8 w-8 text-primary" />
+            <div className="flex flex-col items-center text-center">
+              <span>Tableros</span>
+              {selectedCard && (
+                 <span
+                    className="text-xs font-normal mt-1"
+                    dangerouslySetInnerHTML={formatCardName(selectedCard.name)}
+                 />
+              )}
             </div>
-          )}
+          </Button>
+          <Button
+            variant="outline"
+            className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
+          >
+            <Clock className="h-8 w-8 text-primary" />
+            Línea de tiempo
+          </Button>
+          <Button
+            variant="outline"
+            className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
+          >
+            <Waypoints className="h-8 w-8 text-primary" />
+            CartoDEA
+          </Button>
         </main>
 
         <footer className="bg-neutral-700/60 py-2 dark:bg-neutral-800/60 mt-auto">
@@ -205,4 +187,3 @@ export default function Home() {
     </div>
   );
 }
-
