@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import {
   FolderKanban,
   LayoutGrid,
-  Clock,
   Waypoints,
   Mail,
   X,
@@ -99,6 +98,16 @@ export default function Home() {
       setSelectedCard(null);
       setViewState(INITIAL_VIEW_STATE);
   }
+  
+  const extractLocationFromDesc = (desc: string | undefined): string => {
+    if (!desc) {
+      return 'Seleccione una tarjeta para ver su ubicación.';
+    }
+    const lines = desc.split('\n');
+    const locationLine = lines.find(line => line.startsWith('#'));
+    const query = locationLine ? locationLine.substring(1).trim() : null;
+    return query || 'No se encontró ubicación con # en la descripción.';
+  };
 
   return (
     <div className="relative h-screen w-screen">
@@ -114,7 +123,7 @@ export default function Home() {
               Departamento de Estudios Ambientales y Sociales
             </h1>
             <div className="flex w-1/3 items-center gap-2">
-              <CardSearch onCardSelect={handleCardSelect} selectedCard={selectedCard} />
+              <CardSearch onCardSelect={handleCardSelect} />
                {selectedCard && (
                 <Button variant="ghost" size="icon" onClick={handleClearSelection} className="text-primary-foreground hover:bg-primary/80">
                   <X className="h-5 w-5" />
@@ -149,9 +158,9 @@ export default function Home() {
             </div>
           </Button>
           <div className="h-full flex flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-primary-foreground shadow-lg overflow-auto">
-            <h3 className="text-lg font-semibold text-primary mb-2 text-center">Descripción de la Tarjeta</h3>
+            <h3 className="text-lg font-semibold text-primary mb-2 text-center">Texto de Ubicación (#)</h3>
             <pre className="text-sm whitespace-pre-wrap font-body flex-1">
-              {selectedCard ? selectedCard.desc : 'Seleccione una tarjeta para ver su descripción.'}
+              {extractLocationFromDesc(selectedCard?.desc)}
             </pre>
           </div>
           <Button
