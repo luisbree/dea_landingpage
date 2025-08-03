@@ -37,10 +37,6 @@ export default function Home() {
         const query = extractLocationFromDesc(card.desc, true);
         
         if (query) {
-            toast({
-              title: "Buscando ubicación",
-              description: `Buscando: "${query}"`,
-            });
             const location = await searchLocation(query);
             if (location) {
               setViewState({
