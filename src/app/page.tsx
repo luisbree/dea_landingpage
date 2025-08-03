@@ -165,6 +165,7 @@ export default function Home() {
           <Button
             variant="outline"
             className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-2xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
+            onClick={() => window.open('https://6000-firebase-studio-1753298695333.cluster-vpxjqdstfzgs6qeiaf7rdlsqrc.cloudworkstations.dev/', '_blank')}
           >
             <Waypoints className="h-8 w-8 text-primary" />
             CartoDEA
