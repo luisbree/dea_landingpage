@@ -101,7 +101,7 @@ export default function Home() {
       return 'Seleccione una tarjeta para ver su ubicación.';
     }
 
-    const match = desc.match(/^\s*#\s*(.*)$/m);
+    const match = desc.match(/^\s*\\?#\s*(.*)$/m);
 
     if (match && match[1]) {
         return match[1].trim();
