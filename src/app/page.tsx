@@ -33,9 +33,7 @@ export default function Home() {
 
     if (card && card.desc) {
       try {
-        const lines = card.desc.split('\n');
-        const locationLine = lines.find(line => line.startsWith('#'));
-        const query = locationLine ? locationLine.substring(1).trim() : null;
+        const query = extractLocationFromDesc(card.desc, true);
         
         if (query) {
             toast({
@@ -70,10 +68,6 @@ export default function Home() {
     const code = codeMatch ? codeMatch[0] : '';
     let nameWithoutCode = code ? name.substring(0, name.length - code.length).trim() : name;
   
-    if (nameWithoutCode.length <= 60) {
-      return { __html: name };
-    }
-  
     const lines = [];
     while (nameWithoutCode.length > 0) {
       let cutPoint = 60;
@@ -99,14 +93,21 @@ export default function Home() {
       setViewState(INITIAL_VIEW_STATE);
   }
   
-  const extractLocationFromDesc = (desc: string | undefined): string => {
+  const extractLocationFromDesc = (desc: string | undefined, returnNull?: boolean): string | null => {
+    const defaultMessage = 'No se encontró ubicación con # en la descripción.';
+    const nullReturn = returnNull ? null : defaultMessage;
+
     if (!desc) {
       return 'Seleccione una tarjeta para ver su ubicación.';
     }
-    const lines = desc.split('\n');
-    const locationLine = lines.find(line => line.startsWith('#'));
-    const query = locationLine ? locationLine.substring(1).trim() : null;
-    return query || 'No se encontró ubicación con # en la descripción.';
+
+    const match = desc.match(/^\s*#\s*(.*)$/m);
+
+    if (match && match[1]) {
+        return match[1].trim();
+    }
+    
+    return nullReturn;
   };
 
   return (
