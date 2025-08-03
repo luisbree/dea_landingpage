@@ -10,9 +10,10 @@ import { Textarea } from '@/components/ui/textarea';
 
 interface CardSearchProps {
   onCardSelect: (card: TrelloCard | null) => void;
+  selectedCard: TrelloCard | null;
 }
 
-export default function CardSearch({ onCardSelect }: CardSearchProps) {
+export default function CardSearch({ onCardSelect, selectedCard }: CardSearchProps) {
   const [allCards, setAllCards] = useState<TrelloCard[]>([]);
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -37,6 +38,14 @@ export default function CardSearch({ onCardSelect }: CardSearchProps) {
 
     fetchAllCards();
   }, [toast]);
+  
+  useEffect(() => {
+    if (selectedCard) {
+      setQuery(selectedCard.name);
+    } else {
+      setQuery('');
+    }
+  }, [selectedCard]);
 
   const filteredCards = useMemo(() => {
     if (!query) return [];
@@ -51,7 +60,7 @@ export default function CardSearch({ onCardSelect }: CardSearchProps) {
 
   const handleSelect = (card: TrelloCard) => {
     onCardSelect(card);
-    setQuery('');
+    setQuery(card.name);
     setIsOpen(false);
   };
   

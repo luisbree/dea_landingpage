@@ -9,6 +9,7 @@ import {
   Clock,
   Waypoints,
   Mail,
+  X,
 } from 'lucide-react';
 import MapBackground from '@/components/map-background';
 import TrelloConnectionToast from '@/components/trello-connection-toast';
@@ -93,6 +94,11 @@ export default function Home() {
       window.open(selectedCard.url, '_blank');
     }
   };
+  
+  const handleClearSelection = () => {
+      setSelectedCard(null);
+      setViewState(INITIAL_VIEW_STATE);
+  }
 
   return (
     <div className="relative h-screen w-screen">
@@ -108,7 +114,12 @@ export default function Home() {
               Departamento de Estudios Ambientales y Sociales
             </h1>
             <div className="flex w-1/3 items-center gap-2">
-              <CardSearch onCardSelect={handleCardSelect} />
+              <CardSearch onCardSelect={handleCardSelect} selectedCard={selectedCard} />
+               {selectedCard && (
+                <Button variant="ghost" size="icon" onClick={handleClearSelection} className="text-primary-foreground hover:bg-primary/80">
+                  <X className="h-5 w-5" />
+                </Button>
+              )}
             </div>
           </div>
         </header>
@@ -137,13 +148,12 @@ export default function Home() {
               )}
             </div>
           </Button>
-          <Button
-            variant="outline"
-            className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
-          >
-            <Clock className="h-8 w-8 text-primary" />
-            Línea de tiempo
-          </Button>
+          <div className="h-full flex flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-primary-foreground shadow-lg overflow-auto">
+            <h3 className="text-lg font-semibold text-primary mb-2 text-center">Descripción de la Tarjeta</h3>
+            <pre className="text-sm whitespace-pre-wrap font-body flex-1">
+              {selectedCard ? selectedCard.desc : 'Seleccione una tarjeta para ver su descripción.'}
+            </pre>
+          </div>
           <Button
             variant="outline"
             className="h-full flex-col gap-2 rounded-lg border-transparent bg-neutral-700/60 p-4 text-xl font-semibold text-primary-foreground shadow-lg transition-all hover:bg-neutral-700/80 hover:text-primary dark:bg-neutral-800/60 dark:hover:bg-neutral-800/80"
