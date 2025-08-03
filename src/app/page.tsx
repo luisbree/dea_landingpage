@@ -75,15 +75,15 @@ export default function Home() {
     }
   
     const lines = [];
-    while (nameWithoutCode.length > 60) {
-      let cutPoint = nameWithoutCode.substring(0, 60).lastIndexOf(' ');
-      if (cutPoint === -1) {
-        cutPoint = 60;
+    while (nameWithoutCode.length > 0) {
+      let cutPoint = 60;
+      if (nameWithoutCode.length > 60) {
+        const lastSpace = nameWithoutCode.substring(0, 60).lastIndexOf(' ');
+        cutPoint = lastSpace > 0 ? lastSpace : 60;
       }
       lines.push(nameWithoutCode.substring(0, cutPoint));
       nameWithoutCode = nameWithoutCode.substring(cutPoint).trim();
     }
-    lines.push(nameWithoutCode);
   
     return { __html: `${lines.join('<br />')} ${code}`.trim() };
   };
