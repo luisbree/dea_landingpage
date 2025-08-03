@@ -9,13 +9,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Textarea } from '@/components/ui/textarea';
 
 interface CardSearchProps {
-  value: string;
-  onValueChange: (value: string) => void;
   onCardSelect: (card: TrelloCard | null) => void;
 }
 
-export default function CardSearch({ value, onValueChange, onCardSelect }: CardSearchProps) {
+export default function CardSearch({ onCardSelect }: CardSearchProps) {
   const [allCards, setAllCards] = useState<TrelloCard[]>([]);
+  const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
@@ -40,23 +39,25 @@ export default function CardSearch({ value, onValueChange, onCardSelect }: CardS
   }, [toast]);
 
   const filteredCards = useMemo(() => {
-    if (!value) return [];
+    if (!query) return [];
+    
     // Do not show results if the query exactly matches a card name
-    const exactMatch = allCards.find(card => card.name.toLowerCase() === value.toLowerCase());
+    const exactMatch = allCards.find(card => card.name.toLowerCase() === query.toLowerCase());
     if (exactMatch) return [];
 
     return allCards.filter(card => 
-      card.name.toLowerCase().includes(value.toLowerCase())
+      card.name.toLowerCase().includes(query.toLowerCase())
     );
-  }, [value, allCards]);
+  }, [query, allCards]);
 
   const handleSelect = (card: TrelloCard) => {
+    setQuery(card.name);
     onCardSelect(card);
     setIsOpen(false);
   };
   
   const handleInputChange = (inputValue: string) => {
-      onValueChange(inputValue);
+      setQuery(inputValue);
       
       const exactMatch = allCards.find(c => c.name.toLowerCase() === inputValue.toLowerCase());
       if (exactMatch) {
@@ -76,7 +77,7 @@ export default function CardSearch({ value, onValueChange, onCardSelect }: CardS
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Textarea
-          value={value}
+          value={query}
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder={isLoading ? 'Cargando tarjetas...' : 'Buscar una tarjeta...'}
           className="w-full bg-primary-foreground text-foreground"
@@ -86,7 +87,7 @@ export default function CardSearch({ value, onValueChange, onCardSelect }: CardS
       <PopoverContent className="p-0 w-[--radix-popover-trigger-width]" onOpenAutoFocus={(e) => e.preventDefault()}>
           <Command>
             <CommandList>
-              {filteredCards.length === 0 && value.length > 0 && (
+              {filteredCards.length === 0 && query.length > 0 && (
                 <CommandEmpty>No se encontraron resultados.</CommandEmpty>
               )}
               <CommandGroup>
