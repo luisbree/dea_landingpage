@@ -51,7 +51,7 @@ export default function CardSearch({ onCardSelect }: CardSearchProps) {
   }, [query, allCards]);
 
   const handleSelect = (card: TrelloCard) => {
-    setQuery(card.name);
+    setQuery('');
     onCardSelect(card);
     setIsOpen(false);
   };
