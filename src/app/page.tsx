@@ -9,6 +9,7 @@ import {
   Clock,
   Waypoints,
   Mail,
+  X,
 } from 'lucide-react';
 import MapBackground from '@/components/map-background';
 import TrelloConnectionToast from '@/components/trello-connection-toast';
@@ -26,10 +27,13 @@ const INITIAL_VIEW_STATE = {
 export default function Home() {
   const [selectedCard, setSelectedCard] = useState<TrelloCard | null>(null);
   const [viewState, setViewState] = useState(INITIAL_VIEW_STATE);
+  const [searchQuery, setSearchQuery] = useState('');
   const { toast } = useToast();
 
   const handleCardSelect = async (card: TrelloCard | null) => {
     setSelectedCard(card);
+    setSearchQuery(card ? card.name : ''); // Update search query on select
+
     if (card && card.desc) {
       try {
         const lines = card.desc.split('\n');
@@ -60,6 +64,12 @@ export default function Home() {
     } else {
       setViewState(INITIAL_VIEW_STATE);
     }
+  };
+  
+  const handleClearSelection = () => {
+    setSelectedCard(null);
+    setSearchQuery('');
+    setViewState(INITIAL_VIEW_STATE);
   };
 
   const formatCardName = (name: string | null): { __html: string } => {
@@ -106,8 +116,17 @@ export default function Home() {
             <h1 className="font-headline text-xl font-bold tracking-tight text-primary-foreground">
               Departamento de Estudios Ambientales y Sociales
             </h1>
-            <div className="w-1/3">
-              <CardSearch onCardSelect={handleCardSelect} />
+            <div className="flex w-1/3 items-center gap-2">
+              <CardSearch 
+                value={searchQuery}
+                onValueChange={setSearchQuery}
+                onCardSelect={handleCardSelect} 
+               />
+               {selectedCard && (
+                <Button variant="ghost" size="icon" onClick={handleClearSelection} className="text-primary-foreground hover:bg-primary/80 hover:text-primary-foreground">
+                  <X className="h-5 w-5" />
+                </Button>
+               )}
             </div>
           </div>
         </header>

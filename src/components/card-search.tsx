@@ -9,12 +9,13 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Textarea } from '@/components/ui/textarea';
 
 interface CardSearchProps {
+  value: string;
+  onValueChange: (value: string) => void;
   onCardSelect: (card: TrelloCard | null) => void;
 }
 
-export default function CardSearch({ onCardSelect }: CardSearchProps) {
+export default function CardSearch({ value, onValueChange, onCardSelect }: CardSearchProps) {
   const [allCards, setAllCards] = useState<TrelloCard[]>([]);
-  const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
@@ -39,28 +40,32 @@ export default function CardSearch({ onCardSelect }: CardSearchProps) {
   }, [toast]);
 
   const filteredCards = useMemo(() => {
-    if (!query) return [];
+    if (!value) return [];
     return allCards.filter(card => 
-      card.name.toLowerCase().includes(query.toLowerCase())
+      card.name.toLowerCase().includes(value.toLowerCase())
     );
-  }, [query, allCards]);
+  }, [value, allCards]);
 
-  const handleCardSelect = (card: TrelloCard) => {
-    if (card) {
-      onCardSelect(card);
-      setQuery(card.name); // Show selected card name in textarea
-      setIsOpen(false);
-    }
+  const handleSelect = (card: TrelloCard) => {
+    onCardSelect(card);
+    setIsOpen(false);
   };
   
-  const handleInputChange = (value: string) => {
-      setQuery(value);
-      if (value) {
-        onCardSelect(null); // Clear selection if user types
+  const handleInputChange = (inputValue: string) => {
+      onValueChange(inputValue);
+      
+      if (inputValue) {
+        const exactMatch = allCards.find(c => c.name === inputValue);
+        if(!exactMatch) {
+            onCardSelect(null);
+        }
+      } else {
+        onCardSelect(null);
       }
-      if(value.length > 0 && !isOpen) {
+      
+      if(inputValue.length > 0 && !isOpen) {
           setIsOpen(true);
-      } else if (value.length === 0 && isOpen) {
+      } else if (inputValue.length === 0 && isOpen) {
           setIsOpen(false);
       }
   }
@@ -69,7 +74,7 @@ export default function CardSearch({ onCardSelect }: CardSearchProps) {
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Textarea
-          value={query}
+          value={value}
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder={isLoading ? 'Cargando tarjetas...' : 'Buscar una tarjeta...'}
           className="w-full bg-primary-foreground text-foreground"
@@ -79,7 +84,7 @@ export default function CardSearch({ onCardSelect }: CardSearchProps) {
       <PopoverContent className="p-0 w-[--radix-popover-trigger-width]" onOpenAutoFocus={(e) => e.preventDefault()}>
           <Command>
             <CommandList>
-              {filteredCards.length === 0 && query.length > 0 && (
+              {filteredCards.length === 0 && value.length > 0 && (
                 <CommandEmpty>No se encontraron resultados.</CommandEmpty>
               )}
               <CommandGroup>
@@ -87,7 +92,7 @@ export default function CardSearch({ onCardSelect }: CardSearchProps) {
                   <CommandItem
                     key={card.id}
                     value={card.name}
-                    onSelect={() => handleCardSelect(card)}
+                    onSelect={() => handleSelect(card)}
                     className="cursor-pointer"
                   >
                     {card.name}
