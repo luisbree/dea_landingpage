@@ -41,6 +41,10 @@ export default function CardSearch({ value, onValueChange, onCardSelect }: CardS
 
   const filteredCards = useMemo(() => {
     if (!value) return [];
+    // Do not show results if the query exactly matches a card name
+    const exactMatch = allCards.find(card => card.name.toLowerCase() === value.toLowerCase());
+    if (exactMatch) return [];
+
     return allCards.filter(card => 
       card.name.toLowerCase().includes(value.toLowerCase())
     );
@@ -54,19 +58,17 @@ export default function CardSearch({ value, onValueChange, onCardSelect }: CardS
   const handleInputChange = (inputValue: string) => {
       onValueChange(inputValue);
       
-      if (inputValue) {
-        const exactMatch = allCards.find(c => c.name === inputValue);
-        if(!exactMatch) {
-            onCardSelect(null);
-        }
+      const exactMatch = allCards.find(c => c.name.toLowerCase() === inputValue.toLowerCase());
+      if (exactMatch) {
+        onCardSelect(exactMatch);
+        setIsOpen(false);
       } else {
         onCardSelect(null);
-      }
-      
-      if(inputValue.length > 0 && !isOpen) {
-          setIsOpen(true);
-      } else if (inputValue.length === 0 && isOpen) {
-          setIsOpen(false);
+        if(inputValue.length > 0 && !isOpen) {
+            setIsOpen(true);
+        } else if (inputValue.length === 0 && isOpen) {
+            setIsOpen(false);
+        }
       }
   }
 
